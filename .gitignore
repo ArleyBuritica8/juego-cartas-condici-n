@@ -1,0 +1,10 @@
+# Archivos generados por C++
+*.o
+*.exe
+
+# Carpetas de compilación
+build/
+bin/
+
+# Configuración local de VS Code
+.vscode/
