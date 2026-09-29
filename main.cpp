@@ -1,29 +1,27 @@
 #include <iostream>
-#include <vector>
-#include "Condicion.h"
+#include "Ronda.h"
 
 using namespace std;
 
 int main() {
 
-    vector<Carta> cartas;
-
-    cartas.push_back(Carta("Azul", 8));
-    cartas.push_back(Carta("Rojo", 1));
-    cartas.push_back(Carta("Azul", 4));
-    cartas.push_back(Carta("Verde", 10));
-    cartas.push_back(Carta("Azul", 2));
-
     Condicion condicion("Azul", TipoOrden::MENOR);
 
-    cout << "Condicion:" << endl;
-    condicion.mostrar();
+    Ronda ronda(1, condicion);
+
+    ronda.registrarCarta(Carta("Azul", 8));
+    ronda.registrarCarta(Carta("Rojo", 5));
+    ronda.registrarCarta(Carta("Azul", 4));
+    ronda.registrarCarta(Carta("Azul", 2));
+
+    cout << "Informacion de la ronda:" << endl;
+    ronda.mostrar();
 
     cout << endl;
 
-    Carta ganadora = condicion.determinarGanadora(cartas);
+    Carta ganadora = ronda.determinarGanadora();
 
-    cout << "Carta ganadora: ";
+    cout << "Ganadora de la ronda: ";
     ganadora.mostrar();
 
     return 0;
