@@ -1,33 +1,30 @@
 #include <iostream>
-#include "Jugador.h"
+#include <vector>
+#include "Condicion.h"
 
 using namespace std;
 
 int main() {
 
-    Jugador jugador1(1, "Arley");
+    vector<Carta> cartas;
 
-    jugador1.recibirCarta(Carta("Azul", 8));
-    jugador1.recibirCarta(Carta("Rojo", 3));
-    jugador1.recibirCarta(Carta("Verde", 6));
+    cartas.push_back(Carta("Azul", 8));
+    cartas.push_back(Carta("Rojo", 1));
+    cartas.push_back(Carta("Azul", 4));
+    cartas.push_back(Carta("Verde", 10));
+    cartas.push_back(Carta("Azul", 2));
 
-    jugador1.mostrarInformacion();
+    Condicion condicion("Azul", TipoOrden::MENOR);
 
-    cout << endl;
-
-    jugador1.mostrarMano();
-
-    cout << endl;
-
-    if (jugador1.tieneColor("Azul")) {
-        cout << "El jugador tiene una carta Azul." << endl;
-    }
-
-    jugador1.sumarPunto();
+    cout << "Condicion:" << endl;
+    condicion.mostrar();
 
     cout << endl;
-    cout << "Puntos despues de ganar una ronda: "
-         << jugador1.getPuntos() << endl;
+
+    Carta ganadora = condicion.determinarGanadora(cartas);
+
+    cout << "Carta ganadora: ";
+    ganadora.mostrar();
 
     return 0;
 }
