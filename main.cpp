@@ -1,14 +1,29 @@
 #include <iostream>
-#include "Carta.h"
+#include "Baraja.h"
 
 using namespace std;
 
 int main() {
 
-    Carta carta1("Azul", 8);
+    Baraja baraja;
 
-    cout << "Carta creada: ";
-    carta1.mostrar();
+    cout << "Cantidad inicial de cartas: "
+         << baraja.cantidadCartas() << endl;
+
+    baraja.mezclar();
+
+    cout << "\nSacando 3 cartas:\n";
+
+    for (int i = 0; i < 3; i++) {
+
+        Carta carta = baraja.sacarCarta();
+
+        cout << "Carta " << i + 1 << ": ";
+        carta.mostrar();
+    }
+
+    cout << "\nCartas restantes: "
+         << baraja.cantidadCartas() << endl;
 
     return 0;
 }
