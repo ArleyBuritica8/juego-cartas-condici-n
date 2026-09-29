@@ -1,29 +1,33 @@
 #include <iostream>
-#include "Baraja.h"
+#include "Jugador.h"
 
 using namespace std;
 
 int main() {
 
-    Baraja baraja;
+    Jugador jugador1(1, "Arley");
 
-    cout << "Cantidad inicial de cartas: "
-         << baraja.cantidadCartas() << endl;
+    jugador1.recibirCarta(Carta("Azul", 8));
+    jugador1.recibirCarta(Carta("Rojo", 3));
+    jugador1.recibirCarta(Carta("Verde", 6));
 
-    baraja.mezclar();
+    jugador1.mostrarInformacion();
 
-    cout << "\nSacando 3 cartas:\n";
+    cout << endl;
 
-    for (int i = 0; i < 3; i++) {
+    jugador1.mostrarMano();
 
-        Carta carta = baraja.sacarCarta();
+    cout << endl;
 
-        cout << "Carta " << i + 1 << ": ";
-        carta.mostrar();
+    if (jugador1.tieneColor("Azul")) {
+        cout << "El jugador tiene una carta Azul." << endl;
     }
 
-    cout << "\nCartas restantes: "
-         << baraja.cantidadCartas() << endl;
+    jugador1.sumarPunto();
+
+    cout << endl;
+    cout << "Puntos despues de ganar una ronda: "
+         << jugador1.getPuntos() << endl;
 
     return 0;
 }
