@@ -8,6 +8,8 @@
 using namespace std;
 
 class Ronda {
+    friend class Serializacion;
+
 private:
     int numero;
     Condicion condicion;

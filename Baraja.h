@@ -7,6 +7,8 @@
 using namespace std;
 
 class Baraja {
+    friend class Serializacion;
+
 private:
     vector<Carta> cartas;
 

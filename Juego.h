@@ -3,14 +3,17 @@
 
 #include <vector>
 #include <string>
-
 #include "Baraja.h"
 #include "Jugador.h"
 #include "Ronda.h"
 
 using namespace std;
 
+class Serializacion;
+
 class Juego {
+    friend class Serializacion;
+
 private:
     Baraja baraja;
     vector<Jugador> jugadores;
@@ -31,6 +34,9 @@ public:
 
     void agregarJugador(int id, string nombre);
     void repartirCartas();
+
+    void guardarPartida();
+    void cargarPartida();
 
     void mostrarMenu();
 
