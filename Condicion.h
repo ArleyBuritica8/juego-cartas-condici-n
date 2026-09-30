@@ -9,6 +9,8 @@
 using namespace std;
 
 class Condicion {
+    friend class Serializacion;
+
 private:
     string color;
     TipoOrden orden;
@@ -24,9 +26,7 @@ public:
     void setOrden(TipoOrden orden);
 
     bool cumple(Carta carta);
-
     Carta determinarGanadora(vector<Carta> cartas);
-
     void mostrar();
 };
 

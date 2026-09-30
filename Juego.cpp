@@ -1,4 +1,6 @@
 #include "Juego.h"
+#include "Serializacion.h"
+
 #include <iostream>
 
 using namespace std;
@@ -36,13 +38,16 @@ void Juego::configurar() {
     cin >> cartasPorJugador;
 
     if (cartasPorJugador < 1) {
-        cout << "Debe haber al menos 1 carta." << endl;
+        cout << "Debe haber al menos 1 carta por jugador." << endl;
         cartasPorJugador = 0;
         return;
     }
 
     jugadores.clear();
     rondas.clear();
+
+    rondaActual = 0;
+    iniciado = false;
 
     for (int i = 0; i < cantidadJugadores; i++) {
 
@@ -56,9 +61,6 @@ void Juego::configurar() {
 
         agregarJugador(i + 1, nombre);
     }
-
-    iniciado = false;
-    rondaActual = 0;
 
     cout << endl;
     cout << "Configuracion completada." << endl;
@@ -109,26 +111,28 @@ void Juego::iniciarJuego() {
         return;
     }
 
+    if (iniciado) {
+
+        cout << "El juego ya esta iniciado." << endl;
+
+        return;
+    }
+
     cout << "Jugadores encontrados: "
          << jugadores.size()
          << endl;
-
-    /*
-        Primero comprobamos que la opcion 2
-        funcione correctamente.
-    */
 
     rondaActual = 1;
     iniciado = true;
 
     cout << endl;
     cout << "EL JUEGO SE INICIO CORRECTAMENTE." << endl;
+
     cout << "Ronda actual: "
          << rondaActual
          << endl;
 
     cout << endl;
-    cout << "Ahora vamos a repartir las cartas." << endl;
 
     repartirCartas();
 
@@ -139,9 +143,10 @@ void Juego::iniciarJuego() {
 void Juego::jugarRonda() {
 
     if (!iniciado) {
+
         cout << endl;
         cout << "El juego no ha iniciado." << endl;
-        cout << "Primero seleccione la opcion 1 y luego la opcion 2." << endl;
+
         return;
     }
 
@@ -150,9 +155,10 @@ void Juego::jugarRonda() {
     cout << "         JUGAR RONDA" << endl;
     cout << "============================" << endl;
 
-    cout << "Ronda: " << rondaActual << endl;
+    cout << "Ronda: "
+         << rondaActual
+         << endl;
 
-    // Seleccionar color
     cout << endl;
     cout << "Seleccione el color de la condicion:" << endl;
     cout << "1. Rojo" << endl;
@@ -188,7 +194,6 @@ void Juego::jugarRonda() {
             return;
     }
 
-    // Seleccionar tipo de orden
     cout << endl;
     cout << "Seleccione la condicion:" << endl;
     cout << "1. Mayor" << endl;
@@ -200,29 +205,32 @@ void Juego::jugarRonda() {
     TipoOrden orden;
 
     if (opcionOrden == 1) {
+
         orden = TipoOrden::MAYOR;
+
     }
     else if (opcionOrden == 2) {
+
         orden = TipoOrden::MENOR;
+
     }
     else {
+
         cout << "Condicion invalida." << endl;
         return;
     }
 
-    // Crear la condicion
     Condicion condicion(color, orden);
 
-    // Crear la ronda
     Ronda ronda(rondaActual, condicion);
 
     vector<Carta> cartasJugadas;
 
-    // Turno de cada jugador
     for (int i = 0; i < jugadores.size(); i++) {
 
         cout << endl;
         cout << "----------------------------" << endl;
+
         cout << "Turno de: "
              << jugadores[i].getNombre()
              << endl;
@@ -234,15 +242,11 @@ void Juego::jugarRonda() {
         cout << "Seleccione la posicion de la carta: ";
         cin >> posicion;
 
-        Carta carta = jugadores[i].jugarCarta(posicion);
-
-        // Verificar carta valida
-        if (carta.getColor() == "") {
-            cout << "Posicion invalida." << endl;
-            cout << "Se usara una carta vacia." << endl;
-        }
+        Carta carta =
+            jugadores[i].jugarCarta(posicion);
 
         cout << "Carta jugada: ";
+
         carta.mostrar();
 
         ronda.registrarCarta(carta);
@@ -250,41 +254,52 @@ void Juego::jugarRonda() {
         cartasJugadas.push_back(carta);
     }
 
-    // Determinar ganador
-    Carta ganadora = ronda.determinarGanadora();
+    Carta ganadora =
+        ronda.determinarGanadora();
 
     cout << endl;
     cout << "============================" << endl;
     cout << "       RESULTADO RONDA" << endl;
     cout << "============================" << endl;
 
-    cout << "Condicion: ";
+    cout << "Condicion: "
+         << color
+         << " - ";
 
     if (orden == TipoOrden::MAYOR) {
-        cout << color << " - MAYOR" << endl;
+
+        cout << "MAYOR" << endl;
+
     }
     else {
-        cout << color << " - MENOR" << endl;
+
+        cout << "MENOR" << endl;
     }
 
-    // Comprobar si hubo ganador
     if (ganadora.getColor() == "") {
 
         cout << endl;
-        cout << "Ninguna carta cumplio la condicion." << endl;
-
+        cout << "Ninguna carta cumplio la condicion."
+             << endl;
     }
     else {
 
         cout << endl;
         cout << "Carta ganadora: ";
+
         ganadora.mostrar();
 
-        // Buscar jugador ganador
-        for (int i = 0; i < jugadores.size(); i++) {
+        for (int i = 0;
+             i < jugadores.size();
+             i++) {
 
-            if (cartasJugadas[i].getColor() == ganadora.getColor() &&
-                cartasJugadas[i].getNumero() == ganadora.getNumero()) {
+            if (
+                cartasJugadas[i].getColor()
+                    == ganadora.getColor()
+                &&
+                cartasJugadas[i].getNumero()
+                    == ganadora.getNumero()
+            ) {
 
                 jugadores[i].sumarPunto();
 
@@ -297,10 +312,8 @@ void Juego::jugarRonda() {
         }
     }
 
-    // Guardar la ronda
     rondas.push_back(ronda);
 
-    // Pasar a la siguiente ronda
     rondaActual++;
 
     cout << endl;
@@ -339,11 +352,73 @@ void Juego::mostrarEstado() {
 
     cout << endl;
 
-    for (int i = 0; i < jugadores.size(); i++) {
+    for (int i = 0;
+         i < jugadores.size();
+         i++) {
 
         jugadores[i].mostrarInformacion();
 
         cout << endl;
+    }
+}
+
+void Juego::guardarPartida() {
+
+    cout << endl;
+    cout << "============================" << endl;
+    cout << "       GUARDAR PARTIDA" << endl;
+    cout << "============================" << endl;
+
+    if (!iniciado) {
+
+        cout << "No hay una partida iniciada para guardar."
+             << endl;
+
+        return;
+    }
+
+    string nombreArchivo = "partida.dat";
+
+    if (Serializacion::guardar(
+            *this,
+            nombreArchivo)) {
+
+        cout << "La partida se guardo correctamente."
+             << endl;
+
+    }
+    else {
+
+        cout << "No fue posible guardar la partida."
+             << endl;
+    }
+}
+
+void Juego::cargarPartida() {
+
+    cout << endl;
+    cout << "============================" << endl;
+    cout << "       CARGAR PARTIDA" << endl;
+    cout << "============================" << endl;
+
+    string nombreArchivo = "partida.dat";
+
+    if (Serializacion::cargar(
+            *this,
+            nombreArchivo)) {
+
+        cout << "La partida se cargo correctamente."
+             << endl;
+
+        cout << endl;
+
+        mostrarEstado();
+
+    }
+    else {
+
+        cout << "No fue posible cargar la partida."
+             << endl;
     }
 }
 
@@ -377,7 +452,9 @@ void Juego::mostrarMenu() {
         cout << "2. Iniciar juego" << endl;
         cout << "3. Jugar ronda" << endl;
         cout << "4. Mostrar estado" << endl;
-        cout << "5. Salir" << endl;
+        cout << "5. Guardar partida" << endl;
+        cout << "6. Cargar partida" << endl;
+        cout << "7. Salir" << endl;
 
         cout << endl;
         cout << "Seleccione una opcion: ";
@@ -389,10 +466,9 @@ void Juego::mostrarMenu() {
         if (cin.fail()) {
 
             cin.clear();
-
             cin.ignore(1000, '\n');
 
-            cout << "Debe escribir un numero." << endl;
+            cout << "Debe ingresar un numero." << endl;
 
             continue;
         }
@@ -425,16 +501,30 @@ void Juego::mostrarMenu() {
 
             case 5:
 
-                cout << "Saliendo del juego..." << endl;
+                guardarPartida();
+
+                break;
+
+            case 6:
+
+                cargarPartida();
+
+                break;
+
+            case 7:
+
+                cout << "Saliendo del juego..."
+                     << endl;
 
                 break;
 
             default:
 
-                cout << "Opcion invalida." << endl;
+                cout << "Opcion invalida."
+                     << endl;
 
                 break;
         }
 
-    } while (opcion != 5);
+    } while (opcion != 7);
 }

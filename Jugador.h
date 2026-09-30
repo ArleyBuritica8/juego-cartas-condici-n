@@ -8,6 +8,8 @@
 using namespace std;
 
 class Jugador {
+    friend class Serializacion;
+
 private:
     int id;
     string nombre;

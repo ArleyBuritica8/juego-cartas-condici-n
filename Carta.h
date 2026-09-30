@@ -6,6 +6,8 @@
 using namespace std;
 
 class Carta {
+    friend class Serializacion;
+
 private:
     string color;
     int numero;
